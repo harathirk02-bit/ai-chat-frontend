@@ -14,7 +14,7 @@ function ResumeUpload() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/resume/upload",
+        "https://ai-chat-backend-gn18.onrender.com/upload-resume",
         formData
       );
 
