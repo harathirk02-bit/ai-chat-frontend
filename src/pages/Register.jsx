@@ -14,7 +14,7 @@ function Register() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/auth/register",
+        "https://ai-chat-backend-gn18.onrender.com/auth/register",
         {
           name,
           email,
