@@ -12,7 +12,7 @@ function Chatbot() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/chatbot",
+        "https://ai-chat-backend-gn18.onrender.com/chatbot",
         {
           question
         }
