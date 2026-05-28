@@ -12,7 +12,7 @@ function Chatbot() {
     try {
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/chatbot",
+        "https://ai-chat-backend-gn18.onrender.com/api/chatbot",
         {
           question
         }
