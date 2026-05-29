@@ -19,19 +19,39 @@ function Register() {
           name,
           email,
           password
+        },
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
       );
 
-      alert(response.data.message);
+      console.log(response.data);
 
-    } catch (error) {
-
-      alert("Registration Failed");
+      alert(
+        response.data.message ||
+        "Registration Successful"
+      );
 
     }
+
+    catch (error) {
+
+      console.log("ERROR:", error);
+
+      alert(
+        error?.response?.data?.detail ||
+        error?.message ||
+        "Registration Failed"
+      );
+
+    }
+
   };
 
   return (
+
     <div>
 
       <h2>Register Page</h2>
@@ -39,6 +59,7 @@ function Register() {
       <input
         type="text"
         placeholder="Enter Name"
+        value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
@@ -47,6 +68,7 @@ function Register() {
       <input
         type="email"
         placeholder="Enter Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
@@ -55,6 +77,7 @@ function Register() {
       <input
         type="password"
         placeholder="Enter Password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
 
@@ -65,7 +88,9 @@ function Register() {
       </button>
 
     </div>
+
   );
+
 }
 
 export default Register;
