@@ -4,9 +4,7 @@ import axios from "axios";
 function Register() {
 
   const [name, setName] = useState("");
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   const registerUser = async () => {
@@ -14,7 +12,7 @@ function Register() {
     try {
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/register",
+        "https://ai-chat-backend-gn18.onrender.com/register",
         {
           name,
           email,
@@ -22,16 +20,24 @@ function Register() {
         }
       );
 
-      alert(response.data.message);
+      alert(response.data.message || "Registration Successful");
 
     } catch (error) {
 
-      alert("Registration Failed");
+      console.log(error);
+
+      alert(
+        error?.response?.data?.detail ||
+        error?.message ||
+        "Registration Failed"
+      );
 
     }
+
   };
 
   return (
+
     <div>
 
       <h2>Register Page</h2>
@@ -65,7 +71,9 @@ function Register() {
       </button>
 
     </div>
+
   );
+
 }
 
 export default Register;
