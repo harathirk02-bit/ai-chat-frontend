@@ -4,7 +4,9 @@ import axios from "axios";
 function Register() {
 
   const [name, setName] = useState("");
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const registerUser = async () => {
@@ -17,14 +19,26 @@ function Register() {
           name,
           email,
           password
+        },
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
       );
 
-      alert(response.data.message || "Registration Successful");
+      console.log(response.data);
 
-    } catch (error) {
+      alert(
+        response.data.message ||
+        "Registration Successful"
+      );
 
-      console.log(error);
+    }
+
+    catch (error) {
+
+      console.log("ERROR:", error);
 
       alert(
         error?.response?.data?.detail ||
@@ -45,6 +59,7 @@ function Register() {
       <input
         type="text"
         placeholder="Enter Name"
+        value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
@@ -53,6 +68,7 @@ function Register() {
       <input
         type="email"
         placeholder="Enter Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
@@ -61,6 +77,7 @@ function Register() {
       <input
         type="password"
         placeholder="Enter Password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
 
