@@ -4,9 +4,7 @@ import axios from "axios";
 function Register() {
 
   const [name, setName] = useState("");
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   const registerUser = async () => {
@@ -14,31 +12,19 @@ function Register() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/register",
+        "https://ai-chat-backend-wtaf.onrender.com/register",
         {
           name,
           email,
           password
-        },
-        {
-          headers: {
-            "Content-Type": "application/json"
-          }
         }
       );
 
-      console.log(response.data);
+      alert(response.data.message || "Registration Successful");
 
-      alert(
-        response.data.message ||
-        "Registration Successful"
-      );
+    } catch (error) {
 
-    }
-
-    catch (error) {
-
-      console.log("ERROR:", error);
+      console.log(error);
 
       alert(
         error?.response?.data?.detail ||
@@ -59,7 +45,6 @@ function Register() {
       <input
         type="text"
         placeholder="Enter Name"
-        value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
@@ -68,7 +53,6 @@ function Register() {
       <input
         type="email"
         placeholder="Enter Email"
-        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
@@ -77,7 +61,6 @@ function Register() {
       <input
         type="password"
         placeholder="Enter Password"
-        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
 

@@ -12,7 +12,7 @@ function Login() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/login",
+        "https://ai-chat-backend-wtaf.onrender.com/login",
         {
           email,
           password
