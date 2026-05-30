@@ -1,36 +1,44 @@
 import { useState } from "react";
 import axios from "axios";
 
-function ResumeUpload() {
-
+function UploadResume() {
   const [file, setFile] = useState(null);
 
   const uploadResume = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
 
     const formData = new FormData();
-
     formData.append("file", file);
 
     try {
-
       const response = await axios.post(
         "https://ai-chat-backend-wtaf.onrender.com/upload-resume",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
-      alert(response.data.message);
+      alert("Resume Uploaded Successfully");
+      console.log(response.data);
 
     } catch (error) {
-
+      console.log(error);
       alert("Upload Failed");
-
     }
   };
 
   return (
     <div>
-
-      <h2>Resume Upload</h2>
+      <h2>Upload Resume</h2>
 
       <input
         type="file"
@@ -40,11 +48,10 @@ function ResumeUpload() {
       <br /><br />
 
       <button onClick={uploadResume}>
-        Upload Resume
+        Upload
       </button>
-
     </div>
   );
 }
 
-export default ResumeUpload;
+export default UploadResume;
