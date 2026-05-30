@@ -19,16 +19,28 @@ function Login() {
         }
       );
 
-      alert(response.data.message);
+      // SAVE TOKEN
+
+      localStorage.setItem(
+        "token",
+        response.data.access_token
+      );
+
+      alert(
+        response.data.message ||
+        "Login Successful"
+      );
 
     } catch (error) {
 
       alert("Login Failed");
 
     }
+
   };
 
   return (
+
     <div>
 
       <h2>Login Page</h2>
@@ -54,7 +66,9 @@ function Login() {
       </button>
 
     </div>
+
   );
+
 }
 
 export default Login;
