@@ -16,8 +16,11 @@ function Chatbot() {
       return;
     }
 
+    if (!question.trim()) return;
+
     const userMessage = question;
 
+    // Add user message
     setChat((prev) => [
       ...prev,
       { sender: "user", text: userMessage }
@@ -89,7 +92,6 @@ function Chatbot() {
           </div>
         ))}
 
-        {/* TYPING INDICATOR */}
         {loading && (
           <div style={{ textAlign: "left", margin: "10px" }}>
             <i>AI is typing...</i>
@@ -106,7 +108,9 @@ function Chatbot() {
         style={{ width: "70%", padding: "8px", marginTop: "10px" }}
       />
 
+      {/* IMPORTANT FIX: type="button" prevents blank page */}
       <button
+        type="button"
         onClick={askQuestion}
         style={{ padding: "8px 15px", marginLeft: "10px" }}
       >
