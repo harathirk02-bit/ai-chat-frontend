@@ -1,54 +1,101 @@
-const askQuestion = async () => {
+import { useState } from "react";
+import axios from "axios";
 
-  const token = localStorage.getItem("token");
+function Chatbot() {
 
-  if (!token) {
-    alert("Please Login First");
-    return;
-  }
+  // ✅ STATES (THIS WAS MISSING IN YOUR CODE)
+  const [question, setQuestion] = useState("");
+  const [chat, setChat] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  if (!question.trim()) return;
+  const askQuestion = async () => {
 
-  const userMessage = question;
+    const token = localStorage.getItem("token");
 
-  setQuestion("");
+    if (!token) {
+      alert("Please Login First");
+      return;
+    }
 
-  setChat((prev) => [
-    ...prev,
-    { sender: "user", text: userMessage }
-  ]);
+    if (!question.trim()) return;
 
-  setLoading(true);
+    const userMessage = question;
 
-  try {
+    setQuestion("");
 
-    const response = await axios.post(
-      "https://ai-chat-backend-wtaf.onrender.com/chatbot",
-      { question: userMessage },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+    // Add user message
+    setChat((prev) => [
+      ...prev,
+      { sender: "user", text: userMessage }
+    ]);
+
+    setLoading(true);
+
+    try {
+
+      const response = await axios.post(
+        "https://ai-chat-backend-wtaf.onrender.com/chatbot",
+        { question: userMessage },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
         }
-      }
-    );
+      );
 
-    const aiReply = response?.data?.reply || "No response from AI";
+      const aiReply = response?.data?.reply || "No response";
 
-    setChat((prev) => [
-      ...prev,
-      { sender: "ai", text: aiReply }
-    ]);
+      setChat((prev) => [
+        ...prev,
+        { sender: "ai", text: aiReply }
+      ]);
 
-  } catch (error) {
-    console.log("ERROR:", error);
+    } catch (error) {
+      console.log(error);
 
-    setChat((prev) => [
-      ...prev,
-      { sender: "ai", text: "Server error. Please try again." }
-    ]);
+      setChat((prev) => [
+        ...prev,
+        { sender: "ai", text: "Server error. Try again." }
+      ]);
 
-  }
+    }
 
-  setLoading(false);
-};
+    setLoading(false);
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+
+      <h2>AI Career Chatbot</h2>
+
+      {/* CHAT BOX */}
+      <div style={{ height: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
+
+        {chat.map((msg, i) => (
+          <div key={i} style={{ textAlign: msg.sender === "user" ? "right" : "left" }}>
+            <p><b>{msg.sender}:</b> {msg.text}</p>
+          </div>
+        ))}
+
+        {loading && <p>AI is typing...</p>}
+      </div>
+
+      {/* INPUT */}
+      <input
+        type="text"
+        value={question}
+        placeholder="Ask something..."
+        onChange={(e) => setQuestion(e.target.value)}
+      />
+
+      {/* BUTTON */}
+      <button onClick={askQuestion}>
+        Send
+      </button>
+
+    </div>
+  );
+}
+
+export default Chatbot;
