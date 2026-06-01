@@ -1,124 +1,54 @@
-import { useState } from "react";
-import axios from "axios";
+const askQuestion = async () => {
 
-function Chatbot() {
+  const token = localStorage.getItem("token");
 
-  const [question, setQuestion] = useState("");
-  const [chat, setChat] = useState([]);
-  const [loading, setLoading] = useState(false);
+  if (!token) {
+    alert("Please Login First");
+    return;
+  }
 
-  const askQuestion = async () => {
+  if (!question.trim()) return;
 
-    const token = localStorage.getItem("token");
+  const userMessage = question;
 
-    if (!token) {
-      alert("Please Login First");
-      return;
-    }
+  setQuestion("");
 
-    if (!question.trim()) return;
+  setChat((prev) => [
+    ...prev,
+    { sender: "user", text: userMessage }
+  ]);
 
-    const userMessage = question;
+  setLoading(true);
 
-    // Add user message
+  try {
+
+    const response = await axios.post(
+      "https://ai-chat-backend-wtaf.onrender.com/chatbot",
+      { question: userMessage },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const aiReply = response?.data?.reply || "No response from AI";
+
     setChat((prev) => [
       ...prev,
-      { sender: "user", text: userMessage }
+      { sender: "ai", text: aiReply }
     ]);
 
-    setQuestion("");
-    setLoading(true);
+  } catch (error) {
+    console.log("ERROR:", error);
 
-    try {
+    setChat((prev) => [
+      ...prev,
+      { sender: "ai", text: "Server error. Please try again." }
+    ]);
 
-      const response = await axios.post(
-        "https://ai-chat-backend-wtaf.onrender.com/chatbot",
-        { question: userMessage },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
+  }
 
-      setChat((prev) => [
-        ...prev,
-        { sender: "ai", text: response.data.reply }
-      ]);
-
-    } catch (error) {
-      console.log(error);
-      alert("Chatbot Error");
-    }
-
-    setLoading(false);
-  };
-
-  return (
-    <div style={{ padding: "20px" }}>
-
-      <h2>AI Career Chatbot</h2>
-
-      {/* CHAT BOX */}
-      <div
-        style={{
-          border: "1px solid #ccc",
-          height: "350px",
-          overflowY: "auto",
-          padding: "10px",
-          background: "#f9f9f9"
-        }}
-      >
-        {chat.map((msg, index) => (
-          <div
-            key={index}
-            style={{
-              textAlign: msg.sender === "user" ? "right" : "left",
-              margin: "10px"
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                padding: "10px",
-                borderRadius: "10px",
-                background: msg.sender === "user" ? "#DCF8C6" : "#fff",
-                border: "1px solid #ddd"
-              }}
-            >
-              <b>{msg.sender === "user" ? "You" : "AI"}:</b> {msg.text}
-            </span>
-          </div>
-        ))}
-
-        {loading && (
-          <div style={{ textAlign: "left", margin: "10px" }}>
-            <i>AI is typing...</i>
-          </div>
-        )}
-      </div>
-
-      {/* INPUT */}
-      <input
-        type="text"
-        placeholder="Ask anything..."
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        style={{ width: "70%", padding: "8px", marginTop: "10px" }}
-      />
-
-      {/* IMPORTANT FIX: type="button" prevents blank page */}
-      <button
-        type="button"
-        onClick={askQuestion}
-        style={{ padding: "8px 15px", marginLeft: "10px" }}
-      >
-        Send
-      </button>
-
-    </div>
-  );
-}
-
-export default Chatbot;
+  setLoading(false);
+};
