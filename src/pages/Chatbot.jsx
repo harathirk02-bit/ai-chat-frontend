@@ -3,79 +3,64 @@ import axios from "axios";
 
 function Chatbot() {
 
-  // ✅ STATES (THIS WAS MISSING IN YOUR CODE)
   const [question, setQuestion] = useState("");
-
-  const [answer, setAnswer] = useState("");
+  const [chat, setChat] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const askAI = async () => {
 
     if (!question) {
-
-      alert("Please enter question");
-
+      alert("Enter Question");
       return;
     }
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Please Login First");
-      return;
-    }
-
-    if (!question.trim()) return;
-
-    const userMessage = question;
-
-    setQuestion("");
-
-    // Add user message
-    setChat((prev) => [
-      ...prev,
-      { sender: "user", text: userMessage }
-    ]);
-
-    setLoading(true);
 
     try {
 
+      setLoading(true);
+
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/chatbot/ask",
+        "https://ai-chat-backend-gn18.onrender.com/api/chat",
         {
           question: question
         }
       );
 
-      setAnswer(response.data.answer);
-
-    } catch (error) {
-      console.log(error);
-
-      setAnswer(
-        "Unable to connect with AI server"
-      );
+      setChat(response.data.answer);
 
     }
 
-    setLoading(false);
+    catch (error) {
+
+      console.log(error);
+
+      setChat("Failed to get response");
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
   };
 
   return (
 
     <div className="chat-wrapper">
 
-      <div className="chat-container">
+      <div className="chat-card">
 
-        <h1>AI Career Chatbot</h1>
+        <h1>AI Career Assistant</h1>
 
         <p>
-          Ask interview questions based on your resume
-          and improve your career preparation.
+          Ask career questions, interview questions,
+          or resume-related doubts.
         </p>
 
-        <textarea
-          placeholder="Ask interview questions..."
+        <input
+          type="text"
+          placeholder="Ask something..."
           value={question}
           onChange={(e) =>
             setQuestion(e.target.value)
@@ -83,26 +68,22 @@ function Chatbot() {
         />
 
         <button onClick={askAI}>
-          Ask AI
+          {loading ? "Loading..." : "Ask AI"}
         </button>
 
-        {
-          answer && (
-
-            <div className="answer-box">
-
-              <h3>AI Response</h3>
-
-              <p>{answer}</p>
-
-            </div>
-          )
-        }
+        {chat && (
+          <div className="chat-response">
+            <h3>AI Response</h3>
+            <p>{chat}</p>
+          </div>
+        )}
 
       </div>
 
     </div>
+
   );
+
 }
 
 export default Chatbot;
