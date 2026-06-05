@@ -3,7 +3,6 @@ import axios from "axios";
 
 function Chatbot() {
 
-  // ✅ STATES (THIS WAS MISSING IN YOUR CODE)
   const [question, setQuestion] = useState("");
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,13 +20,16 @@ function Chatbot() {
 
     const userMessage = question;
 
-    setQuestion("");
-
     // Add user message
     setChat((prev) => [
       ...prev,
-      { sender: "user", text: userMessage }
+      {
+        sender: "user",
+        text: userMessage
+      }
     ]);
+
+    setQuestion("");
 
     setLoading(true);
 
@@ -35,7 +37,9 @@ function Chatbot() {
 
       const response = await axios.post(
         "https://ai-chat-backend-wtaf.onrender.com/chatbot",
-        { question: userMessage },
+        {
+          question: userMessage
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -44,19 +48,28 @@ function Chatbot() {
         }
       );
 
-      const aiReply = response?.data?.reply || "No response";
+      const aiReply =
+        response?.data?.reply ||
+        "No response from AI";
 
       setChat((prev) => [
         ...prev,
-        { sender: "ai", text: aiReply }
+        {
+          sender: "ai",
+          text: aiReply
+        }
       ]);
 
     } catch (error) {
+
       console.log(error);
 
       setChat((prev) => [
         ...prev,
-        { sender: "ai", text: "Server error. Try again." }
+        {
+          sender: "ai",
+          text: "Server Error"
+        }
       ]);
 
     }
@@ -65,37 +78,133 @@ function Chatbot() {
   };
 
   return (
+
     <div style={{ padding: "20px" }}>
 
       <h2>AI Career Chatbot</h2>
 
-      {/* CHAT BOX */}
-      <div style={{ height: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
+      {/* CHAT AREA */}
 
-        {chat.map((msg, i) => (
-          <div key={i} style={{ textAlign: msg.sender === "user" ? "right" : "left" }}>
-            <p><b>{msg.sender}:</b> {msg.text}</p>
-          </div>
-        ))}
+      <div
+        style={{
+          border: "1px solid gray",
+          height: "350px",
+          overflowY: "auto",
+          padding: "10px",
+          marginBottom: "20px"
+        }}
+      >
 
-        {loading && <p>AI is typing...</p>}
+        {
+
+          chat.map((msg, index) => (
+
+            <div
+              key={index}
+              style={{
+                textAlign:
+                  msg.sender === "user"
+                    ? "right"
+                    : "left",
+
+                marginBottom: "10px"
+              }}
+            >
+
+              <span>
+
+                <b>
+
+                  {
+
+                    msg.sender === "user"
+
+                      ? "You"
+
+                      : "AI"
+
+                  }
+
+                  :
+
+                </b>
+
+                {" "}
+
+                {msg.text}
+
+              </span>
+
+            </div>
+
+          ))
+
+        }
+
+        {
+
+          loading &&
+
+          <p>
+
+            AI is typing...
+
+          </p>
+
+        }
+
       </div>
 
       {/* INPUT */}
+
       <input
+
         type="text"
-        value={question}
+
         placeholder="Ask something..."
-        onChange={(e) => setQuestion(e.target.value)}
+
+        value={question}
+
+        onChange={(e) =>
+
+          setQuestion(
+
+            e.target.value
+
+          )
+
+        }
+
+        style={{
+          width: "70%",
+          padding: "10px"
+        }}
+
       />
 
       {/* BUTTON */}
-      <button onClick={askQuestion}>
+
+      <button
+
+        type="button"
+
+        onClick={askQuestion}
+
+        style={{
+          marginLeft: "10px",
+          padding: "10px"
+        }}
+
+      >
+
         Send
+
       </button>
 
     </div>
+
   );
+
 }
 
 export default Chatbot;
