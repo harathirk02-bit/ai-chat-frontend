@@ -4,13 +4,24 @@ import axios from "axios";
 function Chatbot() {
 
   const [question, setQuestion] = useState("");
-  const [chat, setChat] = useState("");
+  const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
   const askAI = async () => {
 
     if (!question) {
-      alert("Enter Question");
+
+      alert("Please enter question");
+
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+
+      alert("Please Login First");
+
       return;
     }
 
@@ -19,13 +30,18 @@ function Chatbot() {
       setLoading(true);
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/chat",
+        "https://ai-chat-backend-gn18.onrender.com/api/chatbot/ask",
         {
           question: question
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
       );
 
-      setChat(response.data.answer);
+      setAnswer(response.data.answer);
 
     }
 
@@ -33,7 +49,9 @@ function Chatbot() {
 
       console.log(error);
 
-      setChat("Failed to get response");
+      setAnswer(
+        "Unable to connect with AI server"
+      );
 
     }
 
@@ -49,18 +67,17 @@ function Chatbot() {
 
     <div className="chat-wrapper">
 
-      <div className="chat-card">
+      <div className="chat-container">
 
-        <h1>AI Career Assistant</h1>
+        <h1>AI Career Chatbot</h1>
 
         <p>
-          Ask career questions, interview questions,
-          or resume-related doubts.
+          Ask interview questions based on your resume
+          and improve your career preparation.
         </p>
 
-        <input
-          type="text"
-          placeholder="Ask something..."
+        <textarea
+          placeholder="Ask interview questions..."
           value={question}
           onChange={(e) =>
             setQuestion(e.target.value)
@@ -68,22 +85,32 @@ function Chatbot() {
         />
 
         <button onClick={askAI}>
-          {loading ? "Loading..." : "Ask AI"}
+
+          {
+            loading
+            ? "Loading..."
+            : "Ask AI"
+          }
+
         </button>
 
-        {chat && (
-          <div className="chat-response">
-            <h3>AI Response</h3>
-            <p>{chat}</p>
-          </div>
-        )}
+        {
+          answer && (
+
+            <div className="answer-box">
+
+              <h3>AI Response</h3>
+
+              <p>{answer}</p>
+
+            </div>
+          )
+        }
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default Chatbot;
