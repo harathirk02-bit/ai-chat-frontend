@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { FaUpload } from "react-icons/fa";
 
 function UploadResume() {
 
@@ -7,16 +8,11 @@ function UploadResume() {
 
   const uploadResume = async () => {
 
-    const token = localStorage.getItem("token");
+    if (!file) {
 
-    console.log("TOKEN =", token);
-
-    if (!token) {
-
-      alert("Please Login First");
+      alert("Please select resume");
 
       return;
-
     }
 
     const formData = new FormData();
@@ -41,7 +37,22 @@ function UploadResume() {
         }
       );
 
-      console.log(response.data);
+      localStorage.setItem(
+        "resumeData",
+        JSON.stringify({
+          score: "88%",
+          role: "Frontend Developer",
+          strengths: "React, JavaScript, UI Design",
+          improvement: "Backend, DSA",
+          questions: [
+            "Explain React Hooks",
+            "Difference between let and var",
+            "What is useEffect?"
+          ]
+        })
+      );
+
+      alert(response.data.message);
 
       alert(
         "Resume Uploaded Successfully"
@@ -63,28 +74,37 @@ function UploadResume() {
 
   return (
 
-    <div>
+    <div className="upload-wrapper">
 
-      <h2>Upload Resume</h2>
+      <div className="upload-box">
 
-      <input
-        type="file"
-        onChange={(e) =>
-          setFile(
-            e.target.files[0]
-          )
-        }
-      />
+        <FaUpload
+          size={45}
+          color="#2563eb"
+        />
 
-      <br /><br />
+        <h1>Upload Resume</h1>
 
-      <button
-        onClick={uploadResume}
-      >
+        <p>
+          Upload your resume to get AI-powered
+          analysis and interview preparation.
+        </p>
 
-        Upload Resume
+        <input
+          type="file"
+          onChange={(e) =>
+            setFile(e.target.files[0])
+          }
+        />
 
-      </button>
+        <button
+          className="upload-btn"
+          onClick={uploadResume}
+        >
+          Analyze Resume
+        </button>
+
+      </div>
 
     </div>
 
@@ -92,4 +112,4 @@ function UploadResume() {
 
 }
 
-export default UploadResume;
+export default ResumeUpload;

@@ -2,22 +2,47 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
 
+  const logout = () => {
+
+    localStorage.clear();
+
+    window.location.href = "/login";
+  };
+
   return (
+
     <div className="navbar">
 
-      <Link to="/">Home</Link>
+      <h2>AI Career OS</h2>
 
-      <Link to="/login">Login</Link>
+      <div className="nav-links">
 
-      <Link to="/register">Register</Link>
+        <Link to="/">Home</Link>
 
-      <Link to="/dashboard">Dashboard</Link>
+        <Link to="/login">Login</Link>
 
-      <Link to="/upload">Upload Resume</Link>
+        <Link to="/register">Register</Link>
 
-      <Link to="/roadmap">Roadmap</Link>
+        <Link to="/upload">
+          Upload Resume
+        </Link>
 
-      <Link to="/chatbot">Chatbot</Link>
+        <Link to="/dashboard">
+          Dashboard
+        </Link>
+
+        <Link to="/chatbot">
+          Chatbot
+        </Link>
+
+        <button
+          className="logout-btn"
+          onClick={logout}
+        >
+          Logout
+        </button>
+
+      </div>
 
     </div>
   );

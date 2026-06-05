@@ -5,10 +5,17 @@ function Chatbot() {
 
   // ✅ STATES (THIS WAS MISSING IN YOUR CODE)
   const [question, setQuestion] = useState("");
-  const [chat, setChat] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const askQuestion = async () => {
+  const [answer, setAnswer] = useState("");
+
+  const askAI = async () => {
+
+    if (!question) {
+
+      alert("Please enter question");
+
+      return;
+    }
 
     const token = localStorage.getItem("token");
 
@@ -34,30 +41,20 @@ function Chatbot() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-wtaf.onrender.com/chatbot",
-        { question: userMessage },
+        "https://ai-chat-backend-gn18.onrender.com/api/chatbot/ask",
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+          question: question
         }
       );
 
-      const aiReply = response?.data?.reply || "No response";
-
-      setChat((prev) => [
-        ...prev,
-        { sender: "ai", text: aiReply }
-      ]);
+      setAnswer(response.data.answer);
 
     } catch (error) {
       console.log(error);
 
-      setChat((prev) => [
-        ...prev,
-        { sender: "ai", text: "Server error. Try again." }
-      ]);
+      setAnswer(
+        "Unable to connect with AI server"
+      );
 
     }
 
@@ -65,34 +62,44 @@ function Chatbot() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
 
-      <h2>AI Career Chatbot</h2>
+    <div className="chat-wrapper">
 
-      {/* CHAT BOX */}
-      <div style={{ height: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
+      <div className="chat-container">
 
-        {chat.map((msg, i) => (
-          <div key={i} style={{ textAlign: msg.sender === "user" ? "right" : "left" }}>
-            <p><b>{msg.sender}:</b> {msg.text}</p>
-          </div>
-        ))}
+        <h1>AI Career Chatbot</h1>
 
-        {loading && <p>AI is typing...</p>}
+        <p>
+          Ask interview questions based on your resume
+          and improve your career preparation.
+        </p>
+
+        <textarea
+          placeholder="Ask interview questions..."
+          value={question}
+          onChange={(e) =>
+            setQuestion(e.target.value)
+          }
+        />
+
+        <button onClick={askAI}>
+          Ask AI
+        </button>
+
+        {
+          answer && (
+
+            <div className="answer-box">
+
+              <h3>AI Response</h3>
+
+              <p>{answer}</p>
+
+            </div>
+          )
+        }
+
       </div>
-
-      {/* INPUT */}
-      <input
-        type="text"
-        value={question}
-        placeholder="Ask something..."
-        onChange={(e) => setQuestion(e.target.value)}
-      />
-
-      {/* BUTTON */}
-      <button onClick={askQuestion}>
-        Send
-      </button>
 
     </div>
   );
