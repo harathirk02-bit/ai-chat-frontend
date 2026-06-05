@@ -10,7 +10,7 @@ function Login() {
 
     try {
 
-      await axios.post(
+      const response = await axios.post(
         "https://ai-chat-backend-gn18.onrender.com/api/auth/login",
         {
           email: email,
@@ -18,15 +18,14 @@ function Login() {
         }
       );
 
-      alert("Login Successful");
-
-      // Store Token
       localStorage.setItem(
         "token",
         response.data.access_token
       );
 
       alert("Login Successful");
+
+      window.location.href = "/dashboard";
 
     }
 
@@ -46,18 +45,28 @@ function Login() {
 
       <div className="auth-card">
 
-        <h1>Welcome Back</h1>
+        <h1>
+          Welcome Back
+        </h1>
+
+        <p>
+          Login to continue your AI career journey
+        </p>
 
         <input
           type="email"
           placeholder="Enter Email"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
         />
 
         <input
           type="password"
           placeholder="Enter Password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
         />
 
         <button onClick={loginUser}>

@@ -34,7 +34,7 @@ body{
 }
 
 .nav-links a{
-  color:white;
+  color:rgb(255, 255, 255);
   text-decoration:none;
   font-size:16px;
   transition:0.3s;
@@ -87,7 +87,7 @@ body{
 .hero-btn{
   padding:14px 28px;
   background:#2563eb;
-  color:white;
+  color:rgb(255, 255, 255);
   border:none;
   border-radius:8px;
   cursor:pointer;
@@ -859,4 +859,10 @@ body{
   .dashboard-sections{
     grid-template-columns:1fr;
   }
+}
+.auth-card h1{
+  color:#176af0;
+  margin-bottom: 10px;
+  font-size:32px;
+  font-weight: 700;
 }
