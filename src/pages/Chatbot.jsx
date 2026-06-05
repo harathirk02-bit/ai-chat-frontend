@@ -4,207 +4,113 @@ import axios from "axios";
 function Chatbot() {
 
   const [question, setQuestion] = useState("");
-  const [chat, setChat] = useState([]);
+  const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const askQuestion = async () => {
+  const askAI = async () => {
+
+    if (!question) {
+
+      alert("Please enter question");
+
+      return;
+    }
 
     const token = localStorage.getItem("token");
 
     if (!token) {
+
       alert("Please Login First");
+
       return;
     }
 
-    if (!question.trim()) return;
-
-    const userMessage = question;
-
-    // Add user message
-    setChat((prev) => [
-      ...prev,
-      {
-        sender: "user",
-        text: userMessage
-      }
-    ]);
-
-    setQuestion("");
-
-    setLoading(true);
-
     try {
 
+      setLoading(true);
+
       const response = await axios.post(
-        "https://ai-chat-backend-wtaf.onrender.com/chatbot",
+        "https://ai-chat-backend-gn18.onrender.com/api/chatbot/ask",
         {
-          question: userMessage
+          question: question
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
+            Authorization: `Bearer ${token}`
           }
         }
       );
 
-      const aiReply =
-        response?.data?.reply ||
-        "No response from AI";
-
-      setChat((prev) => [
-        ...prev,
-        {
-          sender: "ai",
-          text: aiReply
-        }
-      ]);
-
-    } catch (error) {
-
-      console.log(error);
-
-      setChat((prev) => [
-        ...prev,
-        {
-          sender: "ai",
-          text: "Server Error"
-        }
-      ]);
+      setAnswer(response.data.answer);
 
     }
 
-    setLoading(false);
+    catch (error) {
+
+      console.log(error);
+
+      setAnswer(
+        "Unable to connect with AI server"
+      );
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
   };
 
   return (
 
-    <div style={{ padding: "20px" }}>
+    <div className="chat-wrapper">
 
-      <h2>AI Career Chatbot</h2>
+      <div className="chat-container">
 
-      {/* CHAT AREA */}
+        <h1>AI Career Chatbot</h1>
 
-      <div
-        style={{
-          border: "1px solid gray",
-          height: "350px",
-          overflowY: "auto",
-          padding: "10px",
-          marginBottom: "20px"
-        }}
-      >
+        <p>
+          Ask interview questions based on your resume
+          and improve your career preparation.
+        </p>
+
+        <textarea
+          placeholder="Ask interview questions..."
+          value={question}
+          onChange={(e) =>
+            setQuestion(e.target.value)
+          }
+        />
+
+        <button onClick={askAI}>
+
+          {
+            loading
+            ? "Loading..."
+            : "Ask AI"
+          }
+
+        </button>
 
         {
+          answer && (
 
-          chat.map((msg, index) => (
+            <div className="answer-box">
 
-            <div
-              key={index}
-              style={{
-                textAlign:
-                  msg.sender === "user"
-                    ? "right"
-                    : "left",
+              <h3>AI Response</h3>
 
-                marginBottom: "10px"
-              }}
-            >
-
-              <span>
-
-                <b>
-
-                  {
-
-                    msg.sender === "user"
-
-                      ? "You"
-
-                      : "AI"
-
-                  }
-
-                  :
-
-                </b>
-
-                {" "}
-
-                {msg.text}
-
-              </span>
+              <p>{answer}</p>
 
             </div>
-
-          ))
-
-        }
-
-        {
-
-          loading &&
-
-          <p>
-
-            AI is typing...
-
-          </p>
-
+          )
         }
 
       </div>
 
-      {/* INPUT */}
-
-      <input
-
-        type="text"
-
-        placeholder="Ask something..."
-
-        value={question}
-
-        onChange={(e) =>
-
-          setQuestion(
-
-            e.target.value
-
-          )
-
-        }
-
-        style={{
-          width: "70%",
-          padding: "10px"
-        }}
-
-      />
-
-      {/* BUTTON */}
-
-      <button
-
-        type="button"
-
-        onClick={askQuestion}
-
-        style={{
-          marginLeft: "10px",
-          padding: "10px"
-        }}
-
-      >
-
-        Send
-
-      </button>
-
     </div>
-
   );
-
 }
 
 export default Chatbot;

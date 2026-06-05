@@ -11,22 +11,21 @@ function Login() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-wtaf.onrender.com/login",
+        "https://ai-chat-backend-gn18.onrender.com/api/auth/login",
         {
           email: email,
           password: password
         }
       );
 
-      console.log(response.data);
-
-      // Store Token
       localStorage.setItem(
         "token",
         response.data.access_token
       );
 
       alert("Login Successful");
+
+      window.location.href = "/dashboard";
 
     }
 
@@ -42,35 +41,39 @@ function Login() {
 
   return (
 
-    <div>
+    <div className="page-center">
 
-      <h2>Login</h2>
+      <div className="auth-card">
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        value={email}
-        onChange={(e) =>
-          setEmail(e.target.value)
-        }
-      />
+        <h1>
+          Welcome Back
+        </h1>
 
-      <br /><br />
+        <p>
+          Login to continue your AI career journey
+        </p>
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        value={password}
-        onChange={(e) =>
-          setPassword(e.target.value)
-        }
-      />
+        <input
+          type="email"
+          placeholder="Enter Email"
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+        />
 
-      <br /><br />
+        <input
+          type="password"
+          placeholder="Enter Password"
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+        />
 
-      <button onClick={loginUser}>
-        Login
-      </button>
+        <button onClick={loginUser}>
+          Login
+        </button>
+
+      </div>
 
     </div>
 

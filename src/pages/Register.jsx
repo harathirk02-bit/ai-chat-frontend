@@ -11,8 +11,8 @@ function Register() {
 
     try {
 
-      const response = await axios.post(
-        "https://ai-chat-backend-wtaf.onrender.com/register",
+      await axios.post(
+        "https://ai-chat-backend-gn18.onrender.com/api/auth/register",
         {
           name,
           email,
@@ -20,7 +20,7 @@ function Register() {
         }
       );
 
-      alert(response.data.message || "Registration Successful");
+      alert("Registration Successful");
 
     } catch (error) {
 
@@ -38,37 +38,37 @@ function Register() {
 
   return (
 
-    <div>
+    <div className="page-center">
 
-      <h2>Register Page</h2>
+      <div className="auth-card">
 
-      <input
-        type="text"
-        placeholder="Enter Name"
-        onChange={(e) => setName(e.target.value)}
-      />
+        <h1>Create Account</h1><br />
+        <label>name:</label>
 
-      <br /><br />
+        <input
+          type="text"
+          placeholder="Enter Name"
+          onChange={(e) => setName(e.target.value)}
+        /><br /><br />
+        <label>email:</label>
+        <input
+          type="email"
+          placeholder="Enter Email"
+          onChange={(e) => setEmail(e.target.value)}
+        /><br /><br />
+        <label>password:</label>
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <input
+          type="password"
+          placeholder="Enter Password"
+          onChange={(e) => setPassword(e.target.value)}
+        /><br /><br />
 
-      <br /><br />
+        <button onClick={registerUser}>
+          Register
+        </button>
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <br /><br />
-
-      <button onClick={registerUser}>
-        Register
-      </button>
+      </div>
 
     </div>
 
