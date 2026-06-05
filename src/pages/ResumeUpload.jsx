@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { FaUpload } from "react-icons/fa";
 
-function UploadResume() {
+function ResumeUpload() {
 
   const [file, setFile] = useState(null);
 
@@ -17,24 +17,13 @@ function UploadResume() {
 
     const formData = new FormData();
 
-    formData.append(
-      "file",
-      file
-    );
+    formData.append("file", file);
 
     try {
 
       const response = await axios.post(
         "https://ai-chat-backend-wtaf.onrender.com/upload-resume",
-        formData,
-        {
-          headers: {
-
-            Authorization:
-              `Bearer ${token}`
-
-          }
-        }
+        formData
       );
 
       localStorage.setItem(
@@ -64,9 +53,7 @@ function UploadResume() {
 
       console.log(error);
 
-      alert(
-        "Upload Failed"
-      );
+      alert("Upload Failed");
 
     }
 
@@ -74,7 +61,7 @@ function UploadResume() {
 
   return (
 
-    <div className="upload-wrapper">
+    <div className="form-container">
 
       <div className="upload-box">
 
@@ -83,7 +70,9 @@ function UploadResume() {
           color="#2563eb"
         />
 
-        <h1>Upload Resume</h1>
+        <h1>
+          Upload Resume
+        </h1>
 
         <p>
           Upload your resume to get AI-powered
