@@ -30,7 +30,7 @@ function Chatbot() {
       setLoading(true);
 
       const response = await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/chatbot/ask",
+         "https://ai-chat-backend-wtaf.onrender.com/api/chatbot/ask",
         {
           question: question
         },

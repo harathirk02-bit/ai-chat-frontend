@@ -12,7 +12,7 @@ function Register() {
     try {
 
       await axios.post(
-        "https://ai-chat-backend-gn18.onrender.com/api/auth/register",
+        "https://ai-chat-backend-wtaf.onrender.com/register",
         {
           name,
           email,
