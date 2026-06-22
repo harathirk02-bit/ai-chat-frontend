@@ -2,113 +2,85 @@ import { useState } from "react";
 import axios from "axios";
 
 function Chatbot() {
-
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
   const askAI = async () => {
-
-    if (!question) {
-
-      alert("Please enter question");
-
+    if (!question.trim()) {
+      alert("Please enter a question");
       return;
     }
 
     const token = localStorage.getItem("token");
 
     if (!token) {
-
-      alert("Please Login First");
-
+      setAnswer("Please login first.");
       return;
     }
 
     try {
-
       setLoading(true);
 
       const response = await axios.post(
-         "https://ai-chat-backend-wtaf.onrender.com/api/chatbot/ask",
+        "https://ai-chat-backend-wtaf.onrender.com/chatbot",
         {
-          question: question
+          question: question,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
-      setAnswer(response.data.answer);
+      setAnswer(response.data.reply || "No response received");
+    } catch (error) {
+      console.error("Chatbot Error:", error);
 
-    }
-
-    catch (error) {
-
-      console.log(error);
-
-      setAnswer(
-        "Unable to connect with AI server"
-      );
-
-    }
-
-    finally {
-
+      if (error.response) {
+        if (error.response.status === 401) {
+          setAnswer("Session expired. Please login again.");
+        } else {
+          setAnswer(error.response.data.detail || "Server error occurred.");
+        }
+      } else {
+        setAnswer("Unable to connect with AI server.");
+      }
+    } finally {
       setLoading(false);
-
     }
-
   };
 
   return (
-
     <div className="chat-wrapper">
-
       <div className="chat-container">
-
         <h1>AI Career Chatbot</h1>
 
         <p>
-          Ask interview questions based on your resume
-          and improve your career preparation.
+          Ask interview questions based on your resume and improve your career
+          preparation.
         </p>
 
         <textarea
+          rows="5"
           placeholder="Ask interview questions..."
           value={question}
-          onChange={(e) =>
-            setQuestion(e.target.value)
-          }
+          onChange={(e) => setQuestion(e.target.value)}
         />
 
-        <button onClick={askAI}>
-
-          {
-            loading
-            ? "Loading..."
-            : "Ask AI"
-          }
-
+        <button onClick={askAI} disabled={loading}>
+          {loading ? "Loading..." : "Ask AI"}
         </button>
 
-        {
-          answer && (
-
-            <div className="answer-box">
-
-              <h3>AI Response</h3>
-
-              <p>{answer}</p>
-
-            </div>
-          )
-        }
-
+        {answer && (
+          <div className="answer-box">
+            <h3>AI Response</h3>
+            <p>{answer}</p>
+          </div>
+        )}
       </div>
-
     </div>
   );
 }

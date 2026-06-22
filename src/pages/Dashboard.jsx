@@ -1,183 +1,66 @@
+import React from "react";
+
 function Dashboard() {
+  const resumeData = JSON.parse(localStorage.getItem("resumeData"));
 
-  const data = JSON.parse(
-    localStorage.getItem("resumeData")
-  );
+  console.log("Dashboard Resume Data:", resumeData);
 
-  return (
+  if (!resumeData) {
+    return (
+      <div className="dashboard">
+        <h1>Dashboard</h1>
 
-    <div className="dashboard-page">
-
-      <div className="dashboard-header">
-
-        <div>
-
-          <h1>
-            AI Career Dashboard
-          </h1>
+        <div className="card">
+          <h2>No Resume Uploaded</h2>
 
           <p>
-            Track your resume performance,
-            interview preparation, and career growth.
+            Upload your resume to get AI analysis,
+            interview questions, and career guidance.
           </p>
+        </div>
+      </div>
+    );
+  }
 
+  return (
+    <div className="dashboard">
+      <h1>Career Dashboard</h1>
+
+      <div className="card-grid">
+        <div className="card">
+          <h2>Resume Score</h2>
+          <p>{resumeData.score || "N/A"}</p>
         </div>
 
+        <div className="card">
+          <h2>Recommended Role</h2>
+          <p>{resumeData.role || "N/A"}</p>
+        </div>
+
+        <div className="card">
+          <h2>Strengths</h2>
+          <p>{resumeData.strengths || "N/A"}</p>
+        </div>
+
+        <div className="card">
+          <h2>Areas to Improve</h2>
+          <p>{resumeData.improvement || "N/A"}</p>
+        </div>
       </div>
 
-      {
-        !data ? (
+      <div className="section">
+        <h2>Interview Questions</h2>
 
-          <div className="empty-dashboard">
-
-            <h2>
-              No Resume Uploaded
-            </h2>
-
-            <p>
-              Upload your resume to get
-              AI-powered analysis.
-            </p>
-
-          </div>
-
+        {resumeData.questions && resumeData.questions.length > 0 ? (
+          <ul>
+            {resumeData.questions.map((q, index) => (
+              <li key={index}>{q}</li>
+            ))}
+          </ul>
         ) : (
-
-          <>
-
-            <div className="dashboard-grid">
-
-              <div className="dashboard-card">
-
-                <h3>Resume Score</h3>
-
-                <h2>{data.score}</h2>
-
-                <p>
-                  ATS Resume Performance
-                </p>
-
-              </div>
-
-              <div className="dashboard-card">
-
-                <h3>Recommended Role</h3>
-
-                <h2>{data.role}</h2>
-
-                <p>
-                  Based on your resume
-                </p>
-
-              </div>
-
-              <div className="dashboard-card">
-
-                <h3>Strengths</h3>
-
-                <p>{data.strengths}</p>
-
-              </div>
-
-              <div className="dashboard-card">
-
-                <h3>Need Improvement</h3>
-
-                <p>{data.improvement}</p>
-
-              </div>
-
-            </div>
-
-            <div className="dashboard-sections">
-
-              <div className="section-box">
-
-                <h2>
-                  Interview Questions
-                </h2>
-
-                {
-                  data.questions.map(
-                    (q, index) => (
-
-                      <div
-                        className="question-box"
-                        key={index}
-                      >
-
-                        {q}
-
-                      </div>
-                    )
-                  )
-                }
-
-              </div>
-
-              <div className="section-box">
-
-                <h2>
-                  Recommended Jobs
-                </h2>
-
-                <div className="job-item">
-
-                  <h3>
-                    Frontend Developer
-                  </h3>
-
-                  <p>
-                    React • JavaScript • UI
-                  </p>
-
-                  <a
-                    href="https://www.linkedin.com/jobs/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-
-                    <button>
-                      Apply Now
-                    </button>
-
-                  </a>
-
-                </div>
-
-                <div className="job-item">
-
-                  <h3>
-                    React Developer Intern
-                  </h3>
-
-                  <p>
-                    Frontend • Internship
-                  </p>
-
-                  <a
-                    href="https://www.naukri.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-
-                    <button>
-                      Apply Now
-                    </button>
-
-                  </a>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </>
-
-        )
-      }
-
+          <p>No interview questions available.</p>
+        )}
+      </div>
     </div>
   );
 }
