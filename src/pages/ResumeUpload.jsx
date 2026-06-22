@@ -30,7 +30,7 @@ function ResumeUpload() {
     try {
 
       const response = await axios.post(
-        "https://ai-chat-backend-wtaf.onrender.com/upload-resumee",
+        "https://ai-chat-backend-wtaf.onrender.com/upload-resume",
         formData,
         {
           headers: {
